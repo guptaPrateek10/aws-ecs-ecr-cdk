@@ -13,7 +13,8 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `npx cdk diff`    compare deployed stack with current state
 * `npx cdk synth`   emits the synthesized CloudFormation template
 
-* `How to run this prpject ?`
+
+# How to run this prpject ?
   1: cdk deploy EcrStack
   2: cdk deploy ECSStack
   3: cd container
