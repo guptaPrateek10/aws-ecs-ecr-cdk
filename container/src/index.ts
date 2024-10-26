@@ -2,6 +2,8 @@ import * as express from "express";
 import * as os from "os";
 import dbConnect from "../dbConnect";
 import userRoute from "../src/routes/userRoutes";
+import categoryRoute from "../src/routes/categoryRoutes";
+import productRoute from "../src/routes/productRoutes";
 const app = express();
 app.use(express.json());
 dbConnect();
@@ -16,6 +18,9 @@ const PORT = process.env.PORT || 80;
 app.listen(PORT, () => console.log(`The app is listening on port ${PORT}.`));
 
 app.use("/api/users", userRoute);
+app.use("/api/category", categoryRoute);
+app.use("/api/product", productRoute);
+
 // const fibonacciNumber = fibonacci(getRandomNumber() * 5);
 // febbonaci calsulate for n
 // function fibonacci(n: number): number {
