@@ -5,15 +5,22 @@
     "node:build": "tsc --project tsconfig.json",
     "node:start": "node ./build/index.js",
     "docker:build": "docker build -t my-node-app .",
-    "docker:run": "docker run -p 80:80 my-node-app"
+    "docker:run": "docker run -p 80:80 my-node-app",
+    "start": "nodemon ./src/index.ts"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "@types/mongoose": "^5.11.96",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.7.3"
   },
   "devDependencies": {
-    "typescript": "^5.5.3",
     "@types/express": "^4.17.21",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.5.3"
   },
   "keywords": [],
   "author": "",
