@@ -5,7 +5,13 @@ import userRoute from "../src/routes/userRoutes";
 import categoryRoute from "../src/routes/categoryRoutes";
 import productRoute from "../src/routes/productRoutes";
 const app = express();
-app.use(express.json());
+app.use(
+  express.json({
+    limit: "10mb",
+  })
+);
+app.use(express.urlencoded({ extended: true }));
+
 dbConnect();
 app.get("/", (request, response) => {
   response.send(`Hi! ECS task ${os.hostname()} is reporting back! `);

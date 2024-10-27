@@ -1,16 +1,17 @@
 // controllers/productController.ts
 import { Request, Response } from "express";
-import Product from "../schema/productSchema";
+import Product, { IProduct } from "../schema/productSchema";
 
 // Create a new product
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, category, stock, images } = req.body;
+    const { name, description, price, CategoryData, stock, images } =
+      req.body as IProduct;
     const product = new Product({
       name,
       description,
       price,
-      category,
+      CategoryData,
       stock,
       images,
     });
@@ -24,7 +25,7 @@ export const createProduct = async (req: Request, res: Response) => {
 // Get all products
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const products = await Product.find().populate("category");
+    const products = await Product.find().populate("CategoryData");
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: "Error fetching products", error });

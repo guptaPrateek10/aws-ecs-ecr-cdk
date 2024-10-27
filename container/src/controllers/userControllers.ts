@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User, { IUser } from "../schema/userSchema";
+import { hashPassword } from "../utils";
 
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -14,12 +15,13 @@ export const createUser = async (req: Request, res: Response) => {
     if (existingUser) {
       return res.status(400).json({ error: "Email already exists" });
     }
-
+    //hash the password
+    const hashedPassword = await hashPassword(password);
     // Create a new user document
     const newUser = new User({
       name,
       email,
-      password,
+      password: hashedPassword,
       role,
     });
     // Save the user to the database
