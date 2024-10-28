@@ -15,8 +15,8 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 
 # How to run this project ?
-  1: cdk deploy EcrStack
-  2: cdk deploy ECSStack
+  * 1: cdk deploy EcrStack
+  * 2: cdk deploy ECSStack
   3: cd container
   4: docker build -t cdk-ecs-app-repository .
   5: docker tag cdk-ecs-app-repository:latest 922372995423.dkr.ecr.us-west-2.amazonaws.com/cdk-ecs-app-repository:latest (replace your docker image tag if new image build)
