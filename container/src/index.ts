@@ -11,8 +11,8 @@ app.use(
     limit: "10mb",
   })
 );
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express.urlencoded({ extended: false }));
+app.use("/uploads", express.static("uploads"));
 dbConnect();
 app.get("/", (request, response) => {
   response.send(`Hi! ECS task ${os.hostname()} is reporting back! `);

@@ -1,19 +1,25 @@
 // controllers/productController.ts
 import { Request, Response } from "express";
 import Product, { IProduct } from "../schema/productSchema";
+// import upload from "../middleware/upload";
 
 // Create a new product
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, CategoryData, stock, images } =
+    const { name, description, price, CategoryData, stock } =
       req.body as IProduct;
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ message: "Image file is required" });
+    }
+    const imageUrl = req.file.path;
     const product = new Product({
       name,
       description,
       price,
       CategoryData,
       stock,
-      images,
+      images: imageUrl,
     });
     await product.save();
     res.status(201).json(product);
