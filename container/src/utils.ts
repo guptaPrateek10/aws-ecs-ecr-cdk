@@ -1,4 +1,5 @@
 import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
 
 const saltRounds = 12;
 
@@ -12,3 +13,11 @@ export const comparePassword = async (
 ): Promise<boolean> => {
   return await bcrypt.compare(plainPassword, hashedPassword);
 };
+
+export function generateToken(payload: any) {
+  const secret = process.env.JWT_SECRET!;
+  const options = {
+    expiresIn: "1d",
+  };
+  return jwt.sign(payload, secret, options);
+}

@@ -4,6 +4,7 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 
 // Define an interface representing a user document in MongoDB.
 export interface IUser extends Document {
+  _id: Types.ObjectId; // Unique identifier for each user document
   name: string;
   email: string;
   password: string;

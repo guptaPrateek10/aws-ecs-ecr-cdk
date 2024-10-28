@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User, { IUser } from "../schema/userSchema";
-import { comparePassword } from "../utils";
-
+import { comparePassword, generateToken } from "../utils";
+import { ObjectId } from "mongodb";
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -9,11 +9,13 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
     const user = await User.findOne({ email });
-    console.log("user found ", user);
+    console.log("user found ", user?._id.toString());
     if (!user || !(await comparePassword(password, user.password))) {
       return res.status(401).json({ error: "Invalid password" });
     }
-    res.json({ message: "Logged in successfully" });
+    //generating the token
+    const token = generateToken({ userId: user._id.toString() });
+    res.json({ message: "Logged in successfully", access_token: token });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
