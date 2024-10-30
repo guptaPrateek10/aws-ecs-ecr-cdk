@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-
-const { MongoClient, ServerApiVersion } = require("mongodb");
 require("dotenv").config();
+const { MongoClient, ServerApiVersion } = require("mongodb");
+
 const MONGODB_URI = process.env.MONGO_URL as string;
 
 const dbConnect = async () => {

@@ -1,29 +1,65 @@
 // controllers/productController.ts
 import { Request, Response } from "express";
 import Product, { IProduct } from "../schema/productSchema";
+import { uploadToS3 } from "../middleware/upload";
+import fileUpload = require("express-fileupload");
+import mongoose from "mongoose";
 // import upload from "../middleware/upload";
 
 // Create a new product
 export const createProduct = async (req: Request, res: Response) => {
+  console.log("req.files", req.files);
+  console.log("req.body", req.body);
+  console.log("req.file", req.file);
+
+  const session = await mongoose.startSession(); // Start a transaction session
+  session.startTransaction(); // Start the transaction
+
   try {
     const { name, description, price, CategoryData, stock } =
       req.body as IProduct;
-    // Check if file was uploaded
-    if (!req.file) {
-      return res.status(400).json({ message: "Image file is required" });
-    }
-    const imageUrl = req.file.path;
-    const product = new Product({
+
+    // Step 1: Create the product without image URL
+    const newProduct = new Product({
       name,
       description,
       price,
       CategoryData,
       stock,
-      images: imageUrl,
+      images: "",
     });
-    await product.save();
-    res.status(201).json(product);
+
+    // Save the product within the transaction session
+    const savedProduct = await newProduct.save({ session });
+
+    // Step 2: Check if an image file is provided
+    if (!req.files || !req.files.image) {
+      await session.abortTransaction();
+      return res.status(400).json({ message: "Image file is required" });
+    }
+
+    const imageFile = req.files.image as fileUpload.UploadedFile;
+    const folderName = `${savedProduct._id}`;
+
+    // Step 3: Upload the image to S3
+    const imageUrl = await uploadToS3(
+      imageFile.data,
+      imageFile.name,
+      folderName
+    );
+
+    // Step 4: Update product with image URL
+    savedProduct.images.push(imageUrl);
+    await savedProduct.save({ session }); // Save the image URL within the transaction session
+
+    await session.commitTransaction(); // Commit transaction if all went well
+    session.endSession();
+
+    res.status(201).json(savedProduct);
   } catch (error) {
+    await session.abortTransaction(); // Roll back the transaction if any error occurs
+    session.endSession();
+    console.error("Error creating product:", error);
     res.status(500).json({ message: "Error creating product", error });
   }
 };

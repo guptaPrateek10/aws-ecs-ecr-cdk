@@ -5,10 +5,20 @@ import userRoute from "../src/routes/userRoutes";
 import categoryRoute from "../src/routes/categoryRoutes";
 import productRoute from "../src/routes/productRoutes";
 import { VerifyToken } from "./middleware/authMiddleware";
+import fileUpload = require("express-fileupload");
+require("dotenv").config();
 const app = express();
 app.use(
   express.json({
     limit: "10mb",
+  })
+);
+// Configure file upload middleware
+app.use(
+  fileUpload({
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    abortOnLimit: true,
+    createParentPath: true,
   })
 );
 app.use(express.urlencoded({ extended: false }));

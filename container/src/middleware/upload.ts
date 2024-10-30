@@ -1,21 +1,32 @@
-import * as multer from "multer";
-import { Request, Response } from "express";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
 import * as path from "path";
-const storage = multer.diskStorage({
-  destination: (req: Request, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname)); // Generates unique filenames
-  },
-});
+import s3Client from "../config/s3Client";
+require("dotenv").config();
+export const uploadToS3 = async (
+  fileBuffer: Buffer,
+  originalName: string,
+  folderName: string
+) => {
+  const bucketName = process.env.AWS_S3_BUCKET_NAME;
+  console.log("bucketName", process.env.AWS_S3_BUCKET_NAME);
+  const fileKey = `${uuidv4()}${path.extname(originalName)}`;
 
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5, // 5MB
-  },
-});
+  const params = {
+    Bucket: bucketName,
+    Key: fileKey,
+    Body: fileBuffer,
+    ContentType: "image/jpeg",
+  };
 
-export default upload;
+  const command = new PutObjectCommand(params);
+
+  try {
+    const response = await s3Client.send(command);
+    console.log("response from S3 ", response);
+    return `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
+  } catch (error) {
+    console.error("Error uploading file to S3:", error);
+    throw error;
+  }
+};
