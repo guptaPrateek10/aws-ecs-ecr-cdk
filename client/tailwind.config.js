@@ -6,10 +6,4 @@ export default {
     extend: {},
   },
   plugins: [],
-  purge: [
-    "./src/pages/**/*.{js,ts,jsx,tsx}",
-    "./src/Components/**/*.{js,ts,jsx,tsx},",
-    "./src/components/**/*.{js,ts,jsx,tsx}",
-  ],
-  enabled: process.env.NODE_ENV === "production",
 };
