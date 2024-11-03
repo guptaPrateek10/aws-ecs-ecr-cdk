@@ -18,4 +18,4 @@ COPY ./build ./build
 
 EXPOSE 80
 
-CMD ["node", "build/index.js"]
+CMD ["node", "build/src/index.js"]
