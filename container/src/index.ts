@@ -1,5 +1,6 @@
 import * as express from "express";
 import * as os from "os";
+const cors = require("cors");
 import dbConnect from "../dbConnect";
 import userRoute from "../src/routes/userRoutes";
 import categoryRoute from "../src/routes/categoryRoutes";
@@ -13,6 +14,7 @@ app.use(
     limit: "10mb",
   })
 );
+app.use(cors());
 // Configure file upload middleware
 app.use(
   fileUpload({

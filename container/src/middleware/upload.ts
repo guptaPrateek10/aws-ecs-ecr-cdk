@@ -1,7 +1,7 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import * as path from "path";
-import s3Client from "../config/s3Client";
+import s3Client from "../config/s3UploadConfig";
 require("dotenv").config();
 export const uploadToS3 = async (
   fileBuffer: Buffer,

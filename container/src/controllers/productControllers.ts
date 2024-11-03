@@ -12,9 +12,8 @@ export const createProduct = async (req: Request, res: Response) => {
   console.log("req.body", req.body);
   console.log("req.file", req.file);
 
-  const session = await mongoose.startSession(); // Start a transaction session
-  session.startTransaction(); // Start the transaction
-
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     const { name, description, price, CategoryData, stock } =
       req.body as IProduct;
@@ -29,10 +28,8 @@ export const createProduct = async (req: Request, res: Response) => {
       images: "",
     });
 
-    // Save the product within the transaction session
     const savedProduct = await newProduct.save({ session });
 
-    // Step 2: Check if an image file is provided
     if (!req.files || !req.files.image) {
       await session.abortTransaction();
       return res.status(400).json({ message: "Image file is required" });

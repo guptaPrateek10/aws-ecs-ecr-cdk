@@ -15,7 +15,7 @@ export const login = async (req: Request, res: Response) => {
     }
     //generating the token
     const token = generateToken({ userId: user._id.toString() });
-    res.json({ message: "Logged in successfully", access_token: token });
+    res.json({ message: "Logged in successfully", token, user });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
