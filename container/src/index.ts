@@ -1,5 +1,6 @@
 import * as express from "express";
 import * as os from "os";
+import rateLimit from "express-rate-limit";
 const cors = require("cors");
 import dbConnect from "../dbConnect";
 import userRoute from "../src/routes/userRoutes";
@@ -9,6 +10,16 @@ import { VerifyToken } from "./middleware/authMiddleware";
 import fileUpload = require("express-fileupload");
 require("dotenv").config();
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Too many requests from this IP, please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use(limiter);
 app.use(
   express.json({
     limit: "10mb",
